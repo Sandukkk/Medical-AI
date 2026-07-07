@@ -1,0 +1,8 @@
+numpy
+pandas
+nibabel
+torch
+matplotlib
+scipy
+scikit-image
+ipykernel

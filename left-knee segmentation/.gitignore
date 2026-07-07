@@ -1,0 +1,7 @@
+mdvenv/
+.DS_Store
+*.nii
+*.nii.gz
+__pycache__/
+*.pyc
+Results/
