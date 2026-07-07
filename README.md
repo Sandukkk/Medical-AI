@@ -1,0 +1,1 @@
+This repository exclusively contains the work of computer vision, data mining and data visualisation on medical dataset. This work is completely independent and for the purpose of experimentation with medical dataset.
