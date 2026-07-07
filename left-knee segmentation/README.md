@@ -1,12 +1,10 @@
-This repo contains the code file for medical-images.
-
 ## Femur and Tibia Segmentation from Left Knee CT
 
 ### Dataset
 
-The input is `3702_left_knee.nii`, a 3D volume of size `512 x 512 x 216`
+This data is a 3D volume of size `512 x 512 x 216`
 voxels, with in-plane resolution of ~0.87mm and slice thickness of 2mm. The
-modality was not stated in the filename or metadata, so it was determined
+modality was determined
 directly from the intensity distribution: the histogram shows a large spike
 of voxels at exactly -1000 (the Hounsfield Unit value of air) and a hard
 floor at -3024 (a padding value used outside the CT reconstruction circle).
@@ -21,8 +19,6 @@ axial (Superior/Inferior) direction, axis 1 to the coronal
 (Anterior/Posterior) direction. This mapping is what allows the code to
 correctly extract axial and coronal slices from the raw 3D array.
 
-*(insert a figure here: raw axial/coronal slices and the intensity histogram
-from `segment.py`)*
 
 ### Step 1: Whole-bone segmentation
 
@@ -32,6 +28,8 @@ morphological closing, small-object removal, and per-axial-slice hole filling
 so each bone is represented as a solid region rather than a hollow shell. The
 largest connected components are retained as the combined bone mask.
 
+![Coronal raw view for whole bone segmentation](Images/segmentation.png)
+
 Initial visual inspection appeared to show an incomplete segmentation, but
 this was a display artifact rather than a segmentation error: default
 autoscaling in `matplotlib` stretched intensity values across the full
@@ -40,9 +38,7 @@ a standard CT bone window (level 400, width 1800) resolved this — the
 segmentation mask matched the visibly dense bone regions in both axial and
 coronal views.
 
-*(insert a figure here: before/after bone-window comparison; also reference
-`animation.gif` in this folder, which shows the bone mask across the full
-slice stack)*
+![Coronal view for whole-bone segmentation](Images/segmented.png)
 
 ### Step 2: Separating femur from tibia
 
@@ -75,16 +71,15 @@ Prominence-based trough detection on this profile locates the joint line
 automatically; voxels on either side are labeled femur and tibia
 respectively.
 
-*(insert a figure here: coronal view showing femur/tibia split at the joint
-line; optionally a short recording of `view_segmentation.py` scrolling
-through axial slices with the overlay)*
+![coronal view showing femur/tibia split at the joint
+line](Images/final_segment.png)
+
 
 ### Output
 
 The complete pipeline is implemented in `segment_femur_tibia.py`, with
 `view_segmentation.py` provided to review the result slice by slice.
-Outputs: `3702_left_knee_femur.nii.gz`, `3702_left_knee_tibia.nii.gz`, and a
-combined `3702_left_knee_femur_tibia_labels.nii.gz` (0 = background,
+Outputs are saved in .nii.gz format which are represented here in the png file format due to storage limit (0 = background,
 1 = femur, 2 = tibia). The full pipeline uses thresholding, morphological
 operations, connected-component analysis, and signal-processing peak
 detection — no deep learning is involved.
